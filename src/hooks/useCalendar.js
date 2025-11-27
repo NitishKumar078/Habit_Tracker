@@ -1,0 +1,32 @@
+import { useState, useMemo } from "react";
+import dayjs from "dayjs";
+
+export function useCalendar({ habits = [] } = {}) {
+  const [current, setCurrent] = useState(dayjs());
+
+  const startOfMonth = current.startOf("month");
+  const startOfGrid = startOfMonth.startOf("week");
+
+  const days = useMemo(() => {
+    return Array.from({ length: 42 }).map((_, i) => {
+      const d = startOfGrid.add(i, "day");
+      const dateStr = d.format("YYYY-MM-DD");
+      return {
+        date: d.date(),
+        fullDate: dateStr,
+        isCurrentMonth: d.month() === current.month(),
+        habits: habits
+          .filter((h) => h.history[dateStr])
+          .map((h) => ({ id: h.id, color: h.color })),
+      };
+    });
+  }, [current, startOfGrid, habits]);
+
+  return {
+    days,
+    currentMonth: current.format("MMMM YYYY"),
+    goNext: () => setCurrent((prev) => prev.add(1, "month")),
+    goPrev: () => setCurrent((prev) => prev.subtract(1, "month")),
+    setCurrent,
+  };
+}
