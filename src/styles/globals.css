@@ -41,3 +41,19 @@ body {
 .animate-fade-scale {
   animation: fade-scale 0.2s ease-out;
 }
+
+.perspective {
+  perspective: 1200px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}

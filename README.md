@@ -2,6 +2,8 @@
 
 A modern, intuitive habit tracking application built with React and Vite. This app helps users build and maintain positive habits through visual tracking, streak monitoring, and insightful analytics. Whether you're aiming to develop daily routines, break bad habits, or simply stay consistent with personal goals, Habits Tracker provides the tools you need in a clean, responsive interface.
 
+LIVE DEMO: https://habit-tracker-sable-zeta.vercel.app/
+
 ## Key Features
 
 - **Habit Management**: Easily add, edit, and delete habits with custom icons and colors
@@ -61,6 +63,13 @@ Follow these step-by-step instructions to set up the project on your local machi
 
 4. **Open in browser**:
    Open your web browser and navigate to `http://localhost:5173` to start using the app.
+
+5. **Build for production** (optional):
+   ```bash
+   npm run build
+   ```
+   This will create an optimized production build in the `dist` folder.
+
 
 ## Usage
 

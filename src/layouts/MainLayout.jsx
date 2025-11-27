@@ -1,13 +1,15 @@
 import HabitList from "../components/menu/HabitList";
+// import { motion } from "framer-motion";
 import Calendar from "../components/calendar/Calendar";
 import HabitSidebar from "../components/habits/HabitSidebar";
 import { useState } from "react";
 import AddHabitModal from "../components/habits/AddHabitModal";
 import HabitStatsHeader from "../components/habits/HabitStatsHeader";
 import { useHabits } from "../hooks/useHabits";
-import HabitAnalyticsModal from "../components/HabitAnalyticsModal";
+import HabitAnalyticsModal from "../components/habits/HabitAnalyticsModal";
 import { Plus } from "lucide-react";
 import logoimg from "../assets/icon48.png";
+import FlippableCard from "../components/habits/FlippableCard";
 
 export default function MainLayout() {
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -46,15 +48,17 @@ export default function MainLayout() {
 
         {/* Main grid: Sidebar left, Calendar right */}
         <div className="mt-4 grid grid-cols-1 lg:grid-cols-12 gap-2 items-start w-full">
-          <div className="lg:col-span-9 min-w-0 m-1 flex flex-col">
-            {view === "calendar" ? (
-              <Calendar onToggleView={() => setView("analytics")} />
-            ) : (
-              <HabitAnalyticsModal
-                onToggleView={() => setView("calendar")}
-                habits={habits}
-              />
-            )}
+          <div className="lg:col-span-9 min-w-0 m-1 flex flex-col w-[60vw]">
+            <FlippableCard
+              flipped={view !== "calendar"}
+              front={<Calendar onToggleView={() => setView("analytics")} />}
+              back={
+                <HabitAnalyticsModal
+                  onToggleView={() => setView("calendar")}
+                  habits={habits}
+                />
+              }
+            />
           </div>
           <div className="lg:col-span-3 min-w-0">
             <HabitSidebar mode="today" />
