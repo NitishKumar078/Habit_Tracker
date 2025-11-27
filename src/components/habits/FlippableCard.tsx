@@ -1,7 +1,13 @@
-// eslint-disable-next-line no-unused-vars
+import React from "react";
 import { motion } from "framer-motion";
 
-export default function FlippableCard({ flipped, front, back }) {
+interface Props {
+  flipped: boolean;
+  front: React.ReactNode;
+  back: React.ReactNode;
+}
+
+export default function FlippableCard({ flipped, front, back }: Props) {
   return (
     <div className="relative w-full h-full perspective">
       <motion.div

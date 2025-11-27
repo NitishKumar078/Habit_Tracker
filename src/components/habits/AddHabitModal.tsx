@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useHabits } from "../../hooks/useHabits";
+import { Habit } from "../../context/HabitContextCommon";
 
 const ICONS = [
   { icon: "fa-person-running", color: "yellow" },
@@ -14,22 +15,28 @@ const ICONS = [
   { icon: "fa-brain", color: "pink" },
 ];
 
-export default function AddHabitModal({ isOpen, onClose, habit }) {
+interface Props {
+  isOpen: boolean;
+  onClose: () => void;
+  habit?: Habit;
+}
+
+export default function AddHabitModal({ isOpen, onClose, habit }: Props) {
   const { addHabit, editHabit } = useHabits();
   const [name, setName] = useState(habit?.name || "");
   const [selectedIcon, setSelectedIcon] = useState(ICONS[0].icon);
   const [selectedColor, setSelectedColor] = useState(ICONS[0].color);
-  const habitinput = useRef(null);
+  const habitinput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (habitinput.current) {
       habitinput.current.focus();
     }
-  }, []);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const trimmedName = name.trim();
 
@@ -54,7 +61,7 @@ export default function AddHabitModal({ isOpen, onClose, habit }) {
     onClose();
   };
 
-  const handleIconSelect = (icon, color) => {
+  const handleIconSelect = (icon: string, color: string) => {
     setSelectedIcon(icon);
     setSelectedColor(color);
   };
@@ -81,7 +88,7 @@ export default function AddHabitModal({ isOpen, onClose, habit }) {
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  ref={(habitinput) => habitinput && habitinput.focus()}
+                  ref={habitinput}
                   required
                   placeholder="e.g. Read 30 mins"
                   className="w-full px-4 py-3 rounded-xl bg-slate-50 border-none focus:ring-2 focus:ring-primary-500 outline-none"
@@ -99,10 +106,9 @@ export default function AddHabitModal({ isOpen, onClose, habit }) {
                       type="button"
                       onClick={() => handleIconSelect(icon, color)}
                       className={`w-10 h-10  text-${color}-600  bg-${color}-200 rounded-lg flex items-center justify-center hover:scale-110 transition-transform ring-2 ring-offset-2 cursor-pointer
-                        ${
-                          selectedIcon === icon
-                            ? "ring-primary-500"
-                            : "ring-transparent"
+                        ${selectedIcon === icon
+                          ? "ring-primary-500"
+                          : "ring-transparent"
                         }`}
                     >
                       {/* Assuming this is a Font Awesome icon class */}

@@ -1,7 +1,25 @@
 import { useState, useMemo } from "react";
 import dayjs from "dayjs";
+import { Habit } from "../context/HabitContextCommon";
 
-export function useCalendar({ habits = [] } = {}) {
+interface CalendarDay {
+  date: number;
+  fullDate: string;
+  isCurrentMonth: boolean;
+  habits: { id: string; color: string }[];
+}
+
+interface UseCalendarReturn {
+  days: CalendarDay[];
+  currentMonth: string;
+  goNext: () => void;
+  goPrev: () => void;
+  setCurrent: (date: dayjs.Dayjs) => void;
+}
+
+export function useCalendar({
+  habits = [],
+}: { habits?: Habit[] } = {}): UseCalendarReturn {
   const [current, setCurrent] = useState(dayjs());
 
   const startOfMonth = current.startOf("month");

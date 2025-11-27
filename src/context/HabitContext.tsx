@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { HabitContext } from "./HabitContextCommon";
+import { HabitContext, Habit, HabitContextType } from "./HabitContextCommon";
 import { v4 as uuid } from "uuid";
 import dayjs from "dayjs";
 
-export function HabitProvider({ children }) {
-  const [habits, setHabits] = useState(() => {
+interface HabitProviderProps {
+  children: React.ReactNode;
+}
+
+export function HabitProvider({ children }: HabitProviderProps) {
+  const [habits, setHabits] = useState<Habit[]>(() => {
     try {
       const loaded = JSON.parse(localStorage.getItem("habits") || "[]");
-      return loaded.map((h) => ({ ...h, history: h.history || {} }));
+      return loaded.map((h: any) => ({ ...h, history: h.history || {} }));
     } catch {
       return [];
     }
@@ -17,8 +21,8 @@ export function HabitProvider({ children }) {
     localStorage.setItem("habits", JSON.stringify(habits));
   }, [habits]);
 
-  const addHabit = ({ name, color, icon, startDate }) => {
-    const h = {
+  const addHabit = ({ name, color, icon, startDate }: { name: string; color: string; icon?: string; startDate?: string }): Habit => {
+    const h: Habit = {
       id: uuid(),
       name,
       color,
@@ -30,25 +34,25 @@ export function HabitProvider({ children }) {
     return h;
   };
 
-  const editHabit = (id, patch) =>
+  const editHabit = (id: string, patch: Partial<Habit>): void =>
     setHabits((prev) =>
       prev.map((h) => (h.id === id ? { ...h, ...patch } : h))
     );
 
-  const deleteHabit = (id) => {
+  const deleteHabit = (id: string): void => {
     setHabits((prev) => prev.filter((h) => h.id !== id));
   };
 
   // completion utilities
-  const getCompletionsForDate = (date) =>
+  const getCompletionsForDate = (date: string): string[] =>
     habits.filter((h) => h.history[date]).map((h) => h.id);
 
-  const isCompleted = (habitId, date) => {
+  const isCompleted = (habitId: string, date: string): boolean => {
     const habit = habits.find((h) => h.id === habitId);
     return habit ? !!habit.history[date] : false;
   };
 
-  const getBestStreak = (habitId) => {
+  const getBestStreak = (habitId: string): number => {
     const habit = habits.find((h) => h.id === habitId);
     if (!habit) return 0;
 
@@ -76,7 +80,7 @@ export function HabitProvider({ children }) {
     return maxStreak;
   };
 
-  const toggleCompletion = (habitId, date) => {
+  const toggleCompletion = (habitId: string, date: string): void => {
     setHabits((prev) =>
       prev.map((h) =>
         h.id === habitId
@@ -86,19 +90,19 @@ export function HabitProvider({ children }) {
     );
   };
 
+  const value: HabitContextType = {
+    habits,
+    addHabit,
+    editHabit,
+    deleteHabit,
+    getCompletionsForDate,
+    toggleCompletion,
+    isCompleted,
+    getBestStreak,
+  };
+
   return (
-    <HabitContext.Provider
-      value={{
-        habits,
-        addHabit,
-        editHabit,
-        deleteHabit,
-        getCompletionsForDate,
-        toggleCompletion,
-        isCompleted,
-        getBestStreak,
-      }}
-    >
+    <HabitContext.Provider value={value}>
       {children}
     </HabitContext.Provider>
   );

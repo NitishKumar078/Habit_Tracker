@@ -1,5 +1,4 @@
 import HabitList from "../components/menu/HabitList";
-// import { motion } from "framer-motion";
 import Calendar from "../components/calendar/Calendar";
 import HabitSidebar from "../components/habits/HabitSidebar";
 import { useState } from "react";
@@ -8,12 +7,12 @@ import HabitStatsHeader from "../components/habits/HabitStatsHeader";
 import { useHabits } from "../hooks/useHabits";
 import HabitAnalyticsModal from "../components/habits/HabitAnalyticsModal";
 import { Plus } from "lucide-react";
-import logoimg from "../assets/icon48.png";
+const logoimg = new URL("../assets/icon48.png", import.meta.url).href;
 import FlippableCard from "../components/habits/FlippableCard";
 
 export default function MainLayout() {
-  const [isAddOpen, setIsAddOpen] = useState(false);
-  const [view, setView] = useState("calendar"); // 'calendar' or 'analytics'
+  const [isAddOpen, setIsAddOpen] = useState<boolean>(false);
+  const [view, setView] = useState<"calendar" | "analytics">("calendar");
   const { habits, getCompletionsForDate, getBestStreak } = useHabits();
 
   // Compute stats
@@ -34,7 +33,7 @@ export default function MainLayout() {
 
   return (
     <div className="min-h-screen p-6 lg:p-10 flex">
-      <p className="top-0 m-1 fixed text-lg font-semibold text-center bg-gradient-to-r from-red-500 to-green-300 bg-clip-text text-transparent">
+      <p className="top-0 m-1 fixed text-lg font-semibold text-center bg-linear-to-r from-red-500 to-green-300 bg-clip-text text-transparent">
         <img src={logoimg} alt="MY_Logo" className="size-5 inline" /> Habit
         Tracker
       </p>

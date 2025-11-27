@@ -1,9 +1,14 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Edit, Trash2 } from "lucide-react";
 import { useHabits } from "../../hooks/useHabits";
 import AddHabitModal from "./AddHabitModal";
+import { Habit } from "../../context/HabitContextCommon";
 
-export default function HabitItem({ habit }) {
+interface Props {
+  habit: Habit;
+}
+
+export default function HabitItem({ habit }: Props) {
   const { deleteHabit, getBestStreak } = useHabits();
   const [showEdit, setShowEdit] = useState(false);
 

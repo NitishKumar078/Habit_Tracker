@@ -1,6 +1,16 @@
-import React from "react";
 
-export default function HabitStatsHeader({ stats }) {
+interface Stats {
+  total: number;
+  completedToday: number;
+  completionRate: number;
+  bestStreak: number;
+}
+
+interface Props {
+  stats: Stats;
+}
+
+export default function HabitStatsHeader({ stats }: Props) {
   const {
     total = 0,
     completedToday = 0,
@@ -35,7 +45,14 @@ export default function HabitStatsHeader({ stats }) {
   );
 }
 
-function StatCard({ label, value, valueColor, streak }) {
+interface StatCardProps {
+  label: string;
+  value: string | number;
+  valueColor: string;
+  streak?: boolean;
+}
+
+function StatCard({ label, value, valueColor, streak }: StatCardProps) {
   return (
     <div className="flex flex-col flex-1 bg-white rounded-xl p-4 shadow-sm border border-slate-100">
       <span className="text-[11px] tracking-wider font-semibold text-slate-500 mb-1">
