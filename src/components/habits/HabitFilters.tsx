@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import type { Habit } from "../../context/HabitContextCommon";
 import { Search } from "lucide-react";
 
 const CATEGORY_MAPPING = {
@@ -12,16 +13,24 @@ const CATEGORY_MAPPING = {
   "fa-briefcase": "personal work",
   "fa-leaf": "quitting meat",
   "fa-brain": "solving puzzle",
+} as const;
+
+type IconKey = keyof typeof CATEGORY_MAPPING;
+
+type HabitFiltersProps = {
+  habits: Habit[];
+  onChange: (filtered: Habit[]) => void;
+  minCountToShow?: number;
 };
 
 export default function HabitFilters({
   habits,
   onChange,
   minCountToShow = 10,
-}) {
-  const [query, setQuery] = useState("");
+}: HabitFiltersProps) {
+  const [query, setQuery] = useState<string>("");
   // const [colorFilter, setColorFilter] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState<string>("");
 
   const shouldShow = habits.length >= minCountToShow;
 
@@ -31,22 +40,26 @@ export default function HabitFilters({
   //   return [...s];
   // }, [habits]);
 
-  const categoryOptions = useMemo(() => {
-    const s = new Set();
-    habits.forEach((h) => h.icon && s.add(CATEGORY_MAPPING[h.icon]));
-    return [...s].filter(Boolean);
+  const categoryOptions = useMemo((): string[] => {
+    const s = new Set<string>();
+    habits.forEach((h) => {
+      if (h.icon && (h.icon as IconKey) in CATEGORY_MAPPING) {
+        s.add(CATEGORY_MAPPING[h.icon as IconKey]);
+      }
+    });
+    return [...s].filter(Boolean) as string[];
   }, [habits]);
 
-  const filtered = useMemo(() => {
+  const filtered = useMemo((): Habit[] => {
     const q = query.trim().toLowerCase();
     return habits.filter((h) => {
       const matchesQuery = q
         ? h.name.toLowerCase().includes(q) ||
-          CATEGORY_MAPPING[h.icon]?.toLowerCase().includes(q)
+        (h.icon && (CATEGORY_MAPPING[h.icon as IconKey]?.toLowerCase().includes(q)))
         : true;
       // const matchesColor = colorFilter ? h.color === colorFilter : true;
       const matchesCategory = categoryFilter
-        ? CATEGORY_MAPPING[h.icon] === categoryFilter
+        ? h.icon && (CATEGORY_MAPPING[h.icon as IconKey] === categoryFilter)
         : true;
       // return matchesQuery && matchesColor && matchesCategory;
       return matchesQuery && matchesCategory;

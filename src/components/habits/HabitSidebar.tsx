@@ -1,4 +1,4 @@
-import { useHabits } from "../../hooks/useHabits";
+import useHabits from "../../hooks/useHabits";
 import HabitItem from "./HabitItem";
 import HabitFilters from "./HabitFilters";
 import dayjs from "dayjs";
@@ -49,14 +49,18 @@ export default function HabitSidebar({ mode = "today" }) {
               key={h.id}
               className="flex items-center justify-between gap-3 p-2 rounded-lg hover:bg-gray-50 transition"
             >
-              <div className="flex items-center gap-3">
-                <i className={`fa-solid ${h.icon} text-sm`}></i>
+              <div className="flex items-center gap-3 " >
+                <div className={`w-10 h-10 rounded-lg  text-black flex items-center justify-center sm:flex`} style={{
+                  background: h.color
+                }}>
+                  <i className="fa-solid fa-person-running"></i>
+                </div>
                 {/* <div
                   className="w-3.5 h-3.5 rounded-full"
                   style={{ background: h.color }}
                 /> */}
                 <div className="text-sm font-medium">
-                  {isCompleted(h.id, today) ? <s>{h.name}</s> : h.name}
+                  {isCompleted(h.id, today) ? <s >{h.name}</s> : h.name}
                 </div>
                 <div className="text-xs text-orange-500 ml-auto">
                   🔥 {getBestStreak(h.id)}
@@ -66,11 +70,10 @@ export default function HabitSidebar({ mode = "today" }) {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => toggleCompletion(h.id, today)}
-                  className={`px-3 py-1 rounded-md ${
-                    isCompleted(h.id, today)
-                      ? "bg-green-600 text-white"
-                      : "bg-gray-200"
-                  }`}
+                  className={`px-3 py-1 rounded-md ${isCompleted(h.id, today)
+                    ? "bg-green-600 text-white"
+                    : "bg-gray-200"
+                    }`}
                 >
                   {isCompleted(h.id, today) ? "Done" : "Mark"}
                 </button>

@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import dayjs from "dayjs";
-import { Habit } from "../context/HabitContextCommon";
+import { Habit } from "@/context/HabitContextCommon";
 
 interface CalendarDay {
   date: number;
@@ -17,7 +17,7 @@ interface UseCalendarReturn {
   setCurrent: (date: dayjs.Dayjs) => void;
 }
 
-export function useCalendar({
+export default function useCalendar({
   habits = [],
 }: { habits?: Habit[] } = {}): UseCalendarReturn {
   const [current, setCurrent] = useState(dayjs());

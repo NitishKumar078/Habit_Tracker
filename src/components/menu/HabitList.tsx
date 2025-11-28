@@ -1,13 +1,14 @@
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Edit, Trash2, SquarePlus } from "lucide-react";
-import { useHabits } from "../../hooks/useHabits";
+import useHabits from "../../hooks/useHabits";
 import AddHabitModal from "../habits/AddHabitModal";
 import HabitFilters from "../habits/HabitFilters";
+import { Habit } from "../../context/HabitContextCommon";
 
 export default function HabitList() {
   const ref = useRef(null);
   const [showEdit, setShowEdit] = useState(false);
-  const [selectedHabit, setSelectedHabit] = useState(null);
+  const [selectedHabit, setSelectedHabit] = useState<Habit | null>(null);
 
   const { habits, deleteHabit } = useHabits();
 
@@ -49,18 +50,19 @@ export default function HabitList() {
                 </h5>
               </div>
             ) : (
-              filteredHabits.map((h) => (
+              filteredHabits.map((h: Habit) => (
                 <div
                   key={h.id}
-                  className="group flex items-center justify-between gap-3 p-2 rounded-md hover:bg-slate-50 transition"
+                  className="group flex items-center  justify-between gap-3 p-2 rounded-md hover:bg-slate-50 transition"
                 >
                   <div className="flex items-center gap-3">
-                    <i className={`fa-solid ${h.icon} text-sm`}></i>
-                    {/* <div
-                      className="w-3.5 h-3.5 rounded-full"
-                      style={{ background: h.color }}
-                    /> */}
-                    <div className="text-sm font-medium">{h.name}</div>
+
+                    <div className={`w-10 h-10 rounded-lg  text-black flex items-center justify-center sm:flex`} style={{
+                      background: h.color
+                    }}>
+                      <i className="fa-solid fa-person-running"></i>
+                    </div>
+                    <div className="text-sm font-medium ">{h.name}</div>
                   </div>
 
                   <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition">
@@ -98,7 +100,7 @@ export default function HabitList() {
         <AddHabitModal
           isOpen={showEdit}
           onClose={() => setShowEdit(false)}
-          habit={selectedHabit}
+          habit={selectedHabit || undefined}
         />
       )}
     </>

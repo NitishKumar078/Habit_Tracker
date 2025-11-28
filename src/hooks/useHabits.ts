@@ -7,7 +7,7 @@ interface UseHabitsReturn extends HabitContextType {
   setSelected: (id: string | null) => void;
 }
 
-export function useHabits(): UseHabitsReturn {
+export default function useHabits(): UseHabitsReturn {
   const context = useHabitsContext();
   const [selected, setSelected] = useState<string | null>(null);
   return {

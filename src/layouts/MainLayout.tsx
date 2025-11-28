@@ -4,7 +4,7 @@ import HabitSidebar from "../components/habits/HabitSidebar";
 import { useState } from "react";
 import AddHabitModal from "../components/habits/AddHabitModal";
 import HabitStatsHeader from "../components/habits/HabitStatsHeader";
-import { useHabits } from "../hooks/useHabits";
+import useHabits from "../hooks/useHabits";
 import HabitAnalyticsModal from "../components/habits/HabitAnalyticsModal";
 import { Plus } from "lucide-react";
 const logoimg = new URL("../assets/icon48.png", import.meta.url).href;

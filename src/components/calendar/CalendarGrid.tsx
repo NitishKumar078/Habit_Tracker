@@ -1,7 +1,17 @@
-import React from "react";
 import CalendarDay from "./CalendarDay";
+type CalendarGridDay = {
+  date: number;
+  fullDate: string;
+  isCurrentMonth: boolean;
+  habits: { id: string; color: string }[];
+};
 
-export default function CalendarGrid({ days, onDayClick }) {
+type CalendarGridProps = {
+  days: CalendarGridDay[];
+  onDayClick: (date: string) => void;
+};
+
+export default function CalendarGrid({ days, onDayClick }: CalendarGridProps) {
   return (
     <>
       <div className="grid grid-cols-7 text-center text-xs font-medium text-gray-400 uppercase mb-2">

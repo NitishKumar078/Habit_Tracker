@@ -1,28 +1,35 @@
-import React, { useState, useRef } from "react";
+import { useState, useRef } from "react";
 import dayjs from "dayjs";
-import { useHabits } from "../../hooks/useHabits";
-// import { b, body } from "framer-motion/client";
+import useHabits from "../../hooks/useHabits";
+import type { Habit } from "../../context/HabitContextCommon";
 
-export default function CalendarDayModal({ date, onClose, habits }) {
+type CalendarDayModalProps = {
+  date: string;
+  onClose: () => void;
+  habits: Habit[];
+};
+
+export default function CalendarDayModal({ date, onClose, habits }: CalendarDayModalProps) {
   const { toggleCompletion, isCompleted } = useHabits();
-  const [error, setError] = useState("");
-  const body = useRef(null);
+  const [error, setError] = useState<string>("");
+  const body = useRef<HTMLDivElement | null>(null);
 
-  const handleToggle = (habitId) => {
-    const habit = habits.find((h) => h.id === habitId);
+  const handleToggle = (habitId: string) => {
+    const habit = habits.find((h: Habit) => h.id === habitId);
+    if (!habit) return;
     const today = dayjs().format("YYYY-MM-DD");
     // scrolling back to future dates or before habit start date
 
     if (date > today) {
       setError("Cannot edit future dates");
       console.log(body);
-      body.current.scrollTo(0, 0, { behavior: "smooth" });
+      body.current?.scrollTo({ top: 0, left: 0, behavior: "smooth" });
       return;
     }
     if (date < habit.startDate) {
       console.log(body);
       setError("Cannot edit before habit start date");
-      body.current.scrollTo(0, 0);
+      body.current?.scrollTo({ top: 0, left: 0 });
       return;
     }
 
@@ -53,7 +60,7 @@ export default function CalendarDayModal({ date, onClose, habits }) {
             </div>
           )}
 
-          {habits.map((h) => (
+          {habits.map((h: Habit) => (
             <div
               key={h.id}
               className="flex items-center justify-between gap-3 p-2 rounded-lg hover:bg-gray-50 transition"
@@ -68,11 +75,10 @@ export default function CalendarDayModal({ date, onClose, habits }) {
 
               <button
                 onClick={() => handleToggle(h.id)}
-                className={`px-3 py-1 rounded-md ${
-                  isCompleted(h.id, date)
-                    ? "bg-green-600 text-white"
-                    : "bg-gray-200"
-                }`}
+                className={`px-3 py-1 rounded-md ${isCompleted(h.id, date)
+                  ? "bg-green-600 text-white"
+                  : "bg-gray-200"
+                  }`}
               >
                 {isCompleted(h.id, date) ? "Done" : "Mark"}
               </button>

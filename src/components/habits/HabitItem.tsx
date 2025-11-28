@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Edit, Trash2 } from "lucide-react";
-import { useHabits } from "../../hooks/useHabits";
+import useHabits from "../../hooks/useHabits";
 import AddHabitModal from "./AddHabitModal";
 import { Habit } from "../../context/HabitContextCommon";
 

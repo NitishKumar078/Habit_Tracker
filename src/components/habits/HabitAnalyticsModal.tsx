@@ -1,8 +1,23 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { PieChart, Calendar1 } from "lucide-react";
+import type { Habit } from "../../context/HabitContextCommon";
+import useHabits from "../../hooks/useHabits";
 
-export default function HabitAnalyticsModal({ onToggleView, habits }) {
+
+type HabitAnalyticsModalProps = {
+  onToggleView: () => void;
+  habits: Habit[];
+};
+
+type HabitPerformance = Habit & {
+  checkIns: number;
+  consistency: number;
+  bestStreak: number;
+};
+
+export default function HabitAnalyticsModal({ onToggleView, habits }: HabitAnalyticsModalProps) {
   const today = new Date();
+  const { getBestStreak } = useHabits();
   const last30 = [...Array(30)].map((_, i) => {
     const d = new Date();
     d.setDate(today.getDate() - (29 - i));
@@ -10,7 +25,7 @@ export default function HabitAnalyticsModal({ onToggleView, habits }) {
   });
 
   // ---- Build 30-day bar chart data ----
-  const activityData = useMemo(() => {
+  const activityData = useMemo((): number[] => {
     return last30.map((date) => {
       let count = 0;
       habits.forEach((h) => {
@@ -21,7 +36,7 @@ export default function HabitAnalyticsModal({ onToggleView, habits }) {
   }, [habits, last30]);
 
   // ---- Habit performance breakdown ----
-  const habitPerformance = useMemo(() => {
+  const habitPerformance = useMemo((): HabitPerformance[] => {
     return habits.map((h) => {
       const checkIns = Object.values(h.history || {}).filter(Boolean).length;
 
@@ -29,29 +44,18 @@ export default function HabitAnalyticsModal({ onToggleView, habits }) {
       const start = new Date(h.startDate);
       const diff = Math.max(
         1,
-        Math.round((today - start) / (1000 * 60 * 60 * 24))
+        Math.round((today.getTime() - start.getTime()) / (1000 * 60 * 60 * 24))
       );
       const consistency = Math.round((checkIns / diff) * 100);
 
-      // best streak calculation
-      let streak = 0;
-      let best = 0;
-      let cursor = new Date(today);
 
-      while (true) {
-        const date = cursor.toISOString().slice(0, 10);
-        if (h.history && h.history[date]) {
-          streak++;
-          best = Math.max(best, streak);
-          cursor.setDate(cursor.getDate() - 1);
-        } else break;
-      }
+      const bestStreak = getBestStreak(h.id);
 
       return {
         ...h,
         checkIns,
         consistency,
-        bestStreak: best,
+        bestStreak,
       };
     });
   }, [habits]);
@@ -130,3 +134,4 @@ export default function HabitAnalyticsModal({ onToggleView, habits }) {
     </div>
   );
 }
+

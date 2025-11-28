@@ -2,8 +2,8 @@ import { useState } from "react";
 import CalendarHeader from "./CalendarHeader";
 import CalendarGrid from "./CalendarGrid";
 import CalendarDayModal from "./CalendarDayModal";
-import { useCalendar } from "../../hooks/useCalendar";
-import { useHabits } from "../../hooks/useHabits";
+import useCalendar from "../../hooks/useCalendar";
+import useHabits from "../../hooks/useHabits";
 
 interface Props {
   onToggleView: () => void;
@@ -14,7 +14,7 @@ export default function Calendar({ onToggleView }: Props) {
   const { currentMonth, goNext, goPrev, days } = useCalendar({
     habits,
   });
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
   return (
     <div className="w-[60vw] bg-white p-6 rounded-2xl shadow-soft border border-gray-100">

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useHabits } from "../../hooks/useHabits";
-import { Habit } from "../../context/HabitContextCommon";
+import type { Habit } from "../../context/HabitContextCommon";
+import useHabits from "../../hooks/useHabits";
 
 const ICONS = [
   { icon: "fa-person-running", color: "yellow" },
