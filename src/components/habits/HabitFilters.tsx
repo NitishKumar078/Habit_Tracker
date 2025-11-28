@@ -43,8 +43,8 @@ export default function HabitFilters({
   const categoryOptions = useMemo((): string[] => {
     const s = new Set<string>();
     habits.forEach((h) => {
-      if (h.icon && (h.icon as IconKey) in CATEGORY_MAPPING) {
-        s.add(CATEGORY_MAPPING[h.icon as IconKey]);
+      if (h.category) {
+        s.add(h.category);
       }
     });
     return [...s].filter(Boolean) as string[];
@@ -55,11 +55,11 @@ export default function HabitFilters({
     return habits.filter((h) => {
       const matchesQuery = q
         ? h.name.toLowerCase().includes(q) ||
-        (h.icon && (CATEGORY_MAPPING[h.icon as IconKey]?.toLowerCase().includes(q)))
+        (h.category && h.category.toLowerCase().includes(q))
         : true;
       // const matchesColor = colorFilter ? h.color === colorFilter : true;
       const matchesCategory = categoryFilter
-        ? h.icon && (CATEGORY_MAPPING[h.icon as IconKey] === categoryFilter)
+        ? h.category === categoryFilter
         : true;
       // return matchesQuery && matchesColor && matchesCategory;
       return matchesQuery && matchesCategory;

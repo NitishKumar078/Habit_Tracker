@@ -2,18 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import type { Habit } from "../../context/HabitContextCommon";
 import useHabits from "../../hooks/useHabits";
 
-const ICONS = [
-  { icon: "fa-person-running", color: "yellow" },
-  { icon: "fa-book", color: "blue" },
-  { icon: "fa-glass-water", color: "cyan" },
-  { icon: "fa-bed", color: "indigo" },
-  { icon: "fa-carrot", color: "orange" },
-  { icon: "fa-code", color: "purple" },
-  { icon: "fa-guitar", color: "rose" },
-  { icon: "fa-briefcase", color: "slate" },
-  { icon: "fa-leaf", color: "green" },
-  { icon: "fa-brain", color: "pink" },
-];
+const COLORS = ["yellow", "blue", "cyan", "indigo", "orange", "purple", "brown", "gray", "green", "pink"];
+
+const CATEGORIES = ["sport", "skill development", "health", "learning", "custom"];
 
 interface Props {
   isOpen: boolean;
@@ -22,16 +13,19 @@ interface Props {
 }
 
 export default function AddHabitModal({ isOpen, onClose, habit }: Props) {
-  const { addHabit, editHabit } = useHabits();
+  const { habits, addHabit, editHabit } = useHabits();
   const [name, setName] = useState(habit?.name || "");
-  const [selectedIcon, setSelectedIcon] = useState(ICONS[0].icon);
-  const [selectedColor, setSelectedColor] = useState(ICONS[0].color);
+  const [selectedColor, setSelectedColor] = useState(habit?.color || "yellow");
+  const [category, setCategory] = useState(habit?.category || "sport");
+  const [customCategory, setCustomCategory] = useState("");
+  const [error, setError] = useState("");
   const habitinput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (habitinput.current) {
       habitinput.current.focus();
     }
+    setError(""); // Clear error when modal opens
   }, [isOpen]);
 
   if (!isOpen) return null;
@@ -42,10 +36,19 @@ export default function AddHabitModal({ isOpen, onClose, habit }: Props) {
 
     if (!trimmedName) return;
 
+    // Check for duplicate habit names
+    const existingHabit = habits.find(h => h.name.toLowerCase() === trimmedName.toLowerCase() && h.id !== habit?.id);
+    if (existingHabit) {
+      setError("A habit with this name already exists.");
+      return;
+    }
+
+    const finalCategory = category === "custom" ? customCategory.trim() || "custom" : category;
+
     const habitData = {
       name: trimmedName,
       color: selectedColor,
-      icon: selectedIcon,
+      category: finalCategory,
     };
 
     if (habit) {
@@ -58,13 +61,13 @@ export default function AddHabitModal({ isOpen, onClose, habit }: Props) {
 
     // Reset local state and close the modal
     setName("");
+    setSelectedColor("yellow");
+    setCategory("sport");
+    setCustomCategory("");
+    setError("");
     onClose();
   };
 
-  const handleIconSelect = (icon: string, color: string) => {
-    setSelectedIcon(icon);
-    setSelectedColor(color);
-  };
 
   return (
     <div className="fixed inset-0 z-50">
@@ -87,32 +90,63 @@ export default function AddHabitModal({ isOpen, onClose, habit }: Props) {
                 <input
                   type="text"
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => {
+                    setName(e.target.value);
+                    setError(""); // Clear error on input change
+                  }}
                   ref={habitinput}
                   required
                   placeholder="e.g. Read 30 mins"
                   className="w-full px-4 py-3 rounded-xl bg-slate-50 border-none focus:ring-2 focus:ring-primary-500 outline-none"
                 />
+                {error && (
+                  <p className="text-red-500 text-sm mt-1">{error}</p>
+                )}
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-slate-500 mb-2">
+                  Category
+                </label>
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl bg-slate-50 border-none focus:ring-2 focus:ring-primary-500 outline-none"
+                >
+                  {CATEGORIES.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                    </option>
+                  ))}
+                </select>
+                {category === "custom" && (
+                  <input
+                    type="text"
+                    value={customCategory}
+                    onChange={(e) => setCustomCategory(e.target.value)}
+                    placeholder="Enter custom category"
+                    className="w-full px-4 py-3 mt-2 rounded-xl bg-slate-50 border-none focus:ring-2 focus:ring-primary-500 outline-none"
+                  />
+                )}
               </div>
 
               <div className="mb-6">
                 <label className="block text-sm font-medium text-slate-500 mb-2">
-                  Icon & Color
+                  Color
                 </label>
                 <div className="grid grid-cols-5 gap-2">
-                  {ICONS.map(({ icon, color }) => (
+                  {COLORS.map((color) => (
                     <button
-                      key={icon}
+                      key={color}
                       type="button"
-                      onClick={() => handleIconSelect(icon, color)}
-                      className={`w-10 h-10  text-${color}-600  bg-${color}-200 rounded-lg flex items-center justify-center hover:scale-110 transition-transform ring-2 ring-offset-2 cursor-pointer
-                        ${selectedIcon === icon
-                          ? "ring-primary-500"
+                      onClick={() => setSelectedColor(color)}
+                      className={`w-10 h-10  rounded-lg hover:scale-110 transition-transform ring-2 ring-offset-2 cursor-pointer
+                        ${selectedColor === color
+                          ? "ring-black"
                           : "ring-transparent"
                         }`}
+                      style={{ backgroundColor: color }}
                     >
-                      {/* Assuming this is a Font Awesome icon class */}
-                      <i className={`fa-solid ${icon}`}></i>
                     </button>
                   ))}
                 </div>
@@ -122,13 +156,13 @@ export default function AddHabitModal({ isOpen, onClose, habit }: Props) {
                 <button
                   type="button"
                   onClick={onClose}
-                  className="flex-1 py-3 bg-slate-200 text-slate-700 rounded-xl"
+                  className="flex-1 py-3 bg-slate-200 text-slate-700 rounded-xl hover:bg-slate-300 active:scale-95 transition-all duration-200"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 py-3 bg-slate-200 text-slate-700 rounded-xl"
+                  className="flex-1 py-3 bg-slate-200 text-slate-700 rounded-xl hover:bg-slate-300 active:scale-95 transition-all duration-200"
                   disabled={!name.trim()} // Optionally disable if name is empty
                 >
                   {habit ? "Save" : "Create Habit"}
@@ -141,3 +175,4 @@ export default function AddHabitModal({ isOpen, onClose, habit }: Props) {
     </div>
   );
 }
+

@@ -5,6 +5,7 @@ export interface Habit {
   name: string;
   color: string;
   icon?: string;
+  category: string;
   startDate: string;
   history: Record<string, boolean>;
 }
@@ -15,6 +16,7 @@ export interface HabitContextType {
     name: string;
     color: string;
     icon?: string;
+    category: string;
     startDate?: string;
   }) => Habit;
   editHabit: (id: string, patch: Partial<Habit>) => void;

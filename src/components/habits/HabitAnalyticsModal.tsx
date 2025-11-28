@@ -3,6 +3,14 @@ import { PieChart, Calendar1 } from "lucide-react";
 import type { Habit } from "../../context/HabitContextCommon";
 import useHabits from "../../hooks/useHabits";
 
+const CATEGORY_ICONS: Record<string, string> = {
+  sport: "fa-person-running",
+  "skill development": "fa-code",
+  health: "fa-glass-water",
+  learning: "fa-book",
+  custom: "fa-brain",
+};
+
 
 type HabitAnalyticsModalProps = {
   onToggleView: () => void;
@@ -82,7 +90,7 @@ export default function HabitAnalyticsModal({ onToggleView, habits }: HabitAnaly
           LAST 30 DAYS ACTIVITY
         </h4>
 
-        <div className="flex items-end gap-[4px] h-28">
+        <div className="flex items-end gap-1 h-28">
           {activityData.map((v, i) => (
             <div
               key={i}
@@ -112,7 +120,7 @@ export default function HabitAnalyticsModal({ onToggleView, habits }: HabitAnaly
                 className="w-8 h-8 rounded-lg flex items-center justify-center text-white"
                 style={{ background: h.color }}
               >
-                <i className={`fa-solid ${h.icon}`} />
+                <i className={`fa-solid ${CATEGORY_ICONS[h.category] || "fa-brain"}`} />
               </div>
               <div className="flex flex-col">
                 <span className="font-semibold text-sm">{h.name}</span>

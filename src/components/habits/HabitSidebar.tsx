@@ -4,6 +4,14 @@ import HabitFilters from "./HabitFilters";
 import dayjs from "dayjs";
 import { useState, useEffect } from "react";
 
+const CATEGORY_ICONS: Record<string, string> = {
+  sport: "fa-person-running",
+  "skill development": "fa-code",
+  health: "fa-glass-water",
+  learning: "fa-book",
+  custom: "fa-brain",
+};
+
 export default function HabitSidebar({ mode = "today" }) {
   const { habits, toggleCompletion, isCompleted, getBestStreak } = useHabits();
   const today = dayjs().format("YYYY-MM-DD");
@@ -28,7 +36,6 @@ export default function HabitSidebar({ mode = "today" }) {
         <HabitFilters
           habits={habits}
           onChange={setFilteredHabits}
-          minCountToShow={10}
         />
       )}
 
@@ -50,10 +57,10 @@ export default function HabitSidebar({ mode = "today" }) {
               className="flex items-center justify-between gap-3 p-2 rounded-lg hover:bg-gray-50 transition"
             >
               <div className="flex items-center gap-3 " >
-                <div className={`w-10 h-10 rounded-lg  text-black flex items-center justify-center sm:flex`} style={{
+                <div className={`size-8 rounded-lg  text-black flex items-center justify-center sm:flex`} style={{
                   background: h.color
                 }}>
-                  <i className="fa-solid fa-person-running"></i>
+                  <i className={`fa-solid ${CATEGORY_ICONS[h.category] || "fa-brain"}`}></i>
                 </div>
                 {/* <div
                   className="w-3.5 h-3.5 rounded-full"
@@ -67,17 +74,27 @@ export default function HabitSidebar({ mode = "today" }) {
                 </div>
               </div>
 
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => toggleCompletion(h.id, today)}
-                  className={`px-3 py-1 rounded-md ${isCompleted(h.id, today)
-                    ? "bg-green-600 text-white"
-                    : "bg-gray-200"
-                    }`}
-                >
-                  {isCompleted(h.id, today) ? "Done" : "Mark"}
-                </button>
-              </div>
+              <button
+                onClick={() => toggleCompletion(h.id, today)}
+                className={`relative px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 ${isCompleted(h.id, today)
+                  ? "bg-green-500 text-white shadow-md hover:shadow-lg hover:bg-green-600"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200 shadow-sm"
+                  }`}
+              >
+                <span className="flex items-center gap-2">
+                  {isCompleted(h.id, today) ? (
+                    <>
+                      <i className="fa-solid fa-check"></i>
+
+                    </>
+                  ) : (
+                    <>
+                      <i className="fa-solid fa-hourglass-half opacity-50"></i>
+
+                    </>
+                  )}
+                </span>
+              </button>
             </div>
           ))
         )}

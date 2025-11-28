@@ -32,7 +32,7 @@ export default function MainLayout() {
   };
 
   return (
-    <div className="min-h-screen p-6 lg:p-10 flex">
+    <div className="min-h-screen p-9 lg:p-20 flex">
       <p className="top-0 m-1 fixed text-lg font-semibold text-center bg-linear-to-r from-red-500 to-green-300 bg-clip-text text-transparent">
         <img src={logoimg} alt="MY_Logo" className="size-5 inline" /> Habit
         Tracker

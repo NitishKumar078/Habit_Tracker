@@ -4,6 +4,14 @@ import useHabits from "../../hooks/useHabits";
 import AddHabitModal from "./AddHabitModal";
 import { Habit } from "../../context/HabitContextCommon";
 
+const CATEGORY_ICONS: Record<string, string> = {
+  sport: "fa-person-running",
+  "skill development": "fa-code",
+  health: "fa-glass-water",
+  learning: "fa-book",
+  custom: "fa-brain",
+};
+
 interface Props {
   habit: Habit;
 }
@@ -15,7 +23,7 @@ export default function HabitItem({ habit }: Props) {
   return (
     <div className="flex items-center justify-between gap-3 p-2 rounded-lg hover:bg-gray-50 transition">
       <div className="flex items-center gap-3">
-        <i className={`fa-solid ${habit.icon} text-sm`}></i>
+        <i className={`fa-solid ${CATEGORY_ICONS[habit.category] || "fa-brain"} text-sm`}></i>
         {/* <div
           className="w-3.5 h-3.5 rounded-full"
           style={{ background: habit.color }}

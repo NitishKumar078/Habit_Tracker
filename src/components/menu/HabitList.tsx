@@ -5,6 +5,14 @@ import AddHabitModal from "../habits/AddHabitModal";
 import HabitFilters from "../habits/HabitFilters";
 import { Habit } from "../../context/HabitContextCommon";
 
+const CATEGORY_ICONS: Record<string, string> = {
+  sport: "fa-person-running",
+  "skill development": "fa-code",
+  health: "fa-glass-water",
+  learning: "fa-book",
+  custom: "fa-brain",
+};
+
 export default function HabitList() {
   const ref = useRef(null);
   const [showEdit, setShowEdit] = useState(false);
@@ -21,7 +29,7 @@ export default function HabitList() {
         ref={ref}
         className="fixed left-4 top-1/4 mt-3 -translate-y-1/4 z-40"
       >
-        <div className="w-52 px-4 py-3 bg-white/40 backdrop-blur-lg border border-slate-200/20 rounded-2xl shadow-soft">
+        <div className="w-64 px-4 py-3 bg-white/40 backdrop-blur-lg border border-slate-200/20 rounded-2xl shadow-soft">
           {/* Header */}
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-lg font-semibold text-center">Habits</h3>
@@ -57,10 +65,10 @@ export default function HabitList() {
                 >
                   <div className="flex items-center gap-3">
 
-                    <div className={`w-10 h-10 rounded-lg  text-black flex items-center justify-center sm:flex`} style={{
+                    <div className={`size-6 rounded-lg  text-black flex items-center justify-center sm:flex`} style={{
                       background: h.color
                     }}>
-                      <i className="fa-solid fa-person-running"></i>
+                      <i className={`fa-solid ${CATEGORY_ICONS[h.category] || "fa-brain"}`}></i>
                     </div>
                     <div className="text-sm font-medium ">{h.name}</div>
                   </div>

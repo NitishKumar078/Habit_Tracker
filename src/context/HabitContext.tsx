@@ -11,7 +11,7 @@ export function HabitProvider({ children }: HabitProviderProps) {
   const [habits, setHabits] = useState<Habit[]>(() => {
     try {
       const loaded = JSON.parse(localStorage.getItem("habits") || "[]");
-      return loaded.map((h: any) => ({ ...h, history: h.history || {} }));
+      return loaded.map((h: any) => ({ ...h, history: h.history || {}, category: h.category || "custom" }));
     } catch {
       return [];
     }
@@ -21,12 +21,13 @@ export function HabitProvider({ children }: HabitProviderProps) {
     localStorage.setItem("habits", JSON.stringify(habits));
   }, [habits]);
 
-  const addHabit = ({ name, color, icon, startDate }: { name: string; color: string; icon?: string; startDate?: string }): Habit => {
+  const addHabit = ({ name, color, icon, category, startDate }: { name: string; color: string; icon?: string; category: string; startDate?: string }): Habit => {
     const h: Habit = {
       id: uuid(),
       name,
       color,
       icon: icon || undefined,
+      category,
       startDate: startDate || new Date().toISOString().slice(0, 10),
       history: {},
     };
