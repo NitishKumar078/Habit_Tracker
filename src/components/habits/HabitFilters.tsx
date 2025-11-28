@@ -2,20 +2,6 @@ import { useMemo, useState } from "react";
 import type { Habit } from "../../context/HabitContextCommon";
 import { Search } from "lucide-react";
 
-const CATEGORY_MAPPING = {
-  "fa-person-running": "Sports",
-  "fa-book": "learning",
-  "fa-glass-water": "drinking",
-  "fa-bed": "sleep/rest",
-  "fa-carrot": "healthy food",
-  "fa-code": "profession skill development",
-  "fa-guitar": "personal skill development",
-  "fa-briefcase": "personal work",
-  "fa-leaf": "quitting meat",
-  "fa-brain": "solving puzzle",
-} as const;
-
-type IconKey = keyof typeof CATEGORY_MAPPING;
 
 type HabitFiltersProps = {
   habits: Habit[];
@@ -29,16 +15,16 @@ export default function HabitFilters({
   minCountToShow = 10,
 }: HabitFiltersProps) {
   const [query, setQuery] = useState<string>("");
-  // const [colorFilter, setColorFilter] = useState("");
+  const [colorFilter, setColorFilter] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("");
 
   const shouldShow = habits.length >= minCountToShow;
 
-  // const colorOptions = useMemo(() => {
-  //   const s = new Set();
-  //   habits.forEach((h) => h.color && s.add(h.color));
-  //   return [...s];
-  // }, [habits]);
+  const colorOptions = useMemo((): string[] => {
+    const s = new Set();
+    habits.forEach((h) => h.color && s.add(h.color));
+    return [...s] as string[];
+  }, [habits]);
 
   const categoryOptions = useMemo((): string[] => {
     const s = new Set<string>();
@@ -57,14 +43,14 @@ export default function HabitFilters({
         ? h.name.toLowerCase().includes(q) ||
         (h.category && h.category.toLowerCase().includes(q))
         : true;
-      // const matchesColor = colorFilter ? h.color === colorFilter : true;
+      const matchesColor = colorFilter ? h.color === colorFilter : true;
       const matchesCategory = categoryFilter
         ? h.category === categoryFilter
         : true;
-      // return matchesQuery && matchesColor && matchesCategory;
-      return matchesQuery && matchesCategory;
+      return matchesQuery && matchesColor && matchesCategory;
+      // return matchesQuery && matchesCategory;
     });
-  }, [habits, query, categoryFilter]); //habits, query, colorFilter, categoryFilter
+  }, [habits, query, colorFilter, categoryFilter]); //habits, query, colorFilter, categoryFilter
 
   // expose filtered list upward
   onChange(filtered);
@@ -97,7 +83,7 @@ export default function HabitFilters({
       </div>
 
       {/* Color Filter */}
-      {/* {colorOptions.length > 0 && (
+      {colorOptions.length > 0 && (
         <div className="flex items-center gap-2">
           <select
             value={colorFilter}
@@ -122,11 +108,11 @@ export default function HabitFilters({
             </button>
           )}
         </div>
-      )} */}
+      )}
 
       {/* Category Filter */}
       {categoryOptions.length > 0 && (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 mt-2">
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
