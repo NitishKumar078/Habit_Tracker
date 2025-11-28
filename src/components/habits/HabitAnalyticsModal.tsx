@@ -6,7 +6,7 @@ import useHabits from "../../hooks/useHabits";
 const CATEGORY_ICONS: Record<string, string> = {
   sport: "fa-person-running",
   "skill development": "fa-code",
-  health: "fa-glass-water",
+  health: "fa-heart",
   learning: "fa-book",
   custom: "fa-brain",
 };
@@ -69,7 +69,7 @@ export default function HabitAnalyticsModal({ onToggleView, habits }: HabitAnaly
   }, [habits]);
 
   return (
-    <div className="w-[60vw] bg-white p-6 rounded-2xl shadow-soft border border-gray-100">
+    <div className="w-full lg:w-[90vw] bg-white p-4 md:p-4 rounded-2xl shadow-soft border border-gray-100">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">

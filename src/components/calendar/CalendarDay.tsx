@@ -2,7 +2,19 @@ import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import dayjs from "dayjs";
 
-export default function CalendarDay({ day, onClick }) {
+type CalendarGridDay = {
+  date: number;
+  fullDate: string;
+  isCurrentMonth: boolean;
+  habits: { id: string; color: string }[];
+};
+
+type Props = {
+  day: CalendarGridDay;
+  onClick: () => void;
+};
+
+export default function CalendarDay({ day, onClick }: Props) {
   const [pulse, setPulse] = useState(false);
   const prevCount = useRef(day.habits.length);
   const isToday = day.fullDate === dayjs().format("YYYY-MM-DD");
@@ -18,11 +30,9 @@ export default function CalendarDay({ day, onClick }) {
   return (
     <div
       onClick={onClick}
-      className={`flex flex-col items-start p-4 rounded-xl hover:bg-gray-200 transition cursor-pointer min-h-15 max-h-20 ${
-        day.isCurrentMonth ? "opacity-100 bg-gray-100" : "opacity-50"
-      } ${isToday ? "border-2 border-blue-500" : ""} ${
-        pulse ? "animate-pulse" : ""
-      }`}
+      className={`flex flex-col items-start p-2 md:p-4 rounded-xl hover:bg-gray-200 transition cursor-pointer min-h-12 md:min-h-15 max-h-16 md:max-h-20 ${day.isCurrentMonth ? "opacity-100 bg-gray-100" : "opacity-50"
+        } ${isToday ? "border-2 border-blue-500" : ""} ${pulse ? "animate-pulse" : ""
+        }`}
     >
       <div className="w-full flex items-center justify-between">
         <span className="text-sm font-medium text-gray-800">{day.date}</span>
@@ -35,7 +45,7 @@ export default function CalendarDay({ day, onClick }) {
               <motion.span
                 key={h.id}
                 className="w-2.5 h-2.5 rounded-full"
-                style={{ background: h.color }}
+                style={{ backgroundColor: h.color } as any}
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.5 }}

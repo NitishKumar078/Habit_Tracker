@@ -75,9 +75,9 @@ export default function AddHabitModal({ isOpen, onClose, habit }: Props) {
         className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
-      <div className="absolute top-1/2 left-1/2 animate-fade-scale -translate-x-1/2 -translate-y-1/2 w-full max-w-md p-4">
-        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
-          <div className="p-6">
+      <div className="absolute inset-4 md:inset-auto md:top-1/2 md:left-1/2 animate-fade-scale md:-translate-x-1/2 md:-translate-y-1/2 md:w-full md:max-w-md">
+        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden max-h-full">
+          <div className="p-4 md:p-6 max-h-full overflow-y-auto">
             <h2 className="text-xl font-bold mb-6">
               {habit ? "Edit Habit" : "Create New Habit"}
             </h2>
@@ -152,17 +152,17 @@ export default function AddHabitModal({ isOpen, onClose, habit }: Props) {
                 </div>
               </div>
 
-              <div className="flex gap-3 mt-8">
+              <div className="flex flex-col sm:flex-row gap-3 mt-8">
                 <button
                   type="button"
                   onClick={onClose}
-                  className="flex-1 py-3 bg-slate-200 text-slate-700 rounded-xl hover:bg-slate-300 active:scale-95 transition-all duration-200"
+                  className="flex-1 py-3 bg-slate-200 text-slate-700 rounded-xl hover:bg-slate-300 active:scale-95 transition-all duration-200 order-2 sm:order-1"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 py-3 bg-slate-200 text-slate-700 rounded-xl hover:bg-slate-300 active:scale-95 transition-all duration-200"
+                  className="flex-1 py-3 bg-slate-200 text-slate-700 rounded-xl hover:bg-slate-300 active:scale-95 transition-all duration-200 order-1 sm:order-2"
                   disabled={!name.trim()} // Optionally disable if name is empty
                 >
                   {habit ? "Save" : "Create Habit"}

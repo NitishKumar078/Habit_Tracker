@@ -17,7 +17,7 @@ export default function Calendar({ onToggleView }: Props) {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
   return (
-    <div className="w-[60vw] bg-white p-6 rounded-2xl shadow-soft border border-gray-100">
+    <div className="w-full bg-white p-3 md:p-6 rounded-2xl shadow-soft border border-gray-100">
       <CalendarHeader
         currentMonth={currentMonth}
         goNext={goNext}

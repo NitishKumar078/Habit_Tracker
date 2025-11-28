@@ -11,7 +11,7 @@ export default function FlippableCard({ flipped, front, back }: Props) {
   return (
     <div className="relative w-full h-full perspective">
       <motion.div
-        className="relative w-full h-full preserve-3d"
+        className="relative w-full h-full preserve-3d lg:w-[135%]"
         animate={{ rotateY: flipped ? 180 : 0 }}
         transition={{ duration: 0.55, ease: "easeInOut" }}
       >

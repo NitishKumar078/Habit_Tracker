@@ -3,14 +3,7 @@ import HabitItem from "./HabitItem";
 import HabitFilters from "./HabitFilters";
 import dayjs from "dayjs";
 import { useState, useEffect } from "react";
-
-const CATEGORY_ICONS: Record<string, string> = {
-  sport: "fa-person-running",
-  "skill development": "fa-code",
-  health: "fa-glass-water",
-  learning: "fa-book",
-  custom: "fa-brain",
-};
+import { CATEGORY_ICONS } from "../../layouts/MainLayout";
 
 export default function HabitSidebar({ mode = "today" }) {
   const { habits, toggleCompletion, isCompleted, getBestStreak } = useHabits();
@@ -40,7 +33,7 @@ export default function HabitSidebar({ mode = "today" }) {
       )}
 
       {/* Habit List */}
-      <div className="flex flex-col gap-3 max-h-[60vh] overflow-auto pr-2">
+      <div className="flex flex-col gap-3 max-h-[60vh] overflow-auto pr-2 w-[60vw] md:w-auto">
         {filteredHabits.length === 0 ? (
           <div className="text-sm text-gray-500">
             {habits.length === 0
